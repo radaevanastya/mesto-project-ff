@@ -7,7 +7,7 @@
     "build": "rm -rf dist && webpack --mode production",
     "dev": "webpack serve"
   },
-  "author": ""radaevanastya",
+  "author": "radaevanastya",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.4.20",
