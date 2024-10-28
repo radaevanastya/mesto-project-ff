@@ -7,7 +7,7 @@ const container = document.querySelector('.content');
 const cardList = container.querySelector('.places__list');
 
 // Попапы (Модальные окна)
-const AllPopup = document.querySelectorAll('.popup');
+const allPopup = document.querySelectorAll('.popup');
 const profileAddPopup = document.querySelector('.popup_type_new-card');
 const profileImagePopup = document.querySelector('.popup__avatar');
 const profilePopup = document.querySelector('.popup_type_edit');
