@@ -1,14 +1,24 @@
-export const openPopup = (popup) => {
-  popup.classList.add('popup_is-opened');
-  document.addEventListener('keydown', closeEsc);
+function escKeyHandler(evt) {
+    if (evt.key === "Escape") {
+      closePopup(document.querySelector(".popup_is-opened"));
+    }
+  }
+
+export function openPopup(popup) {
+  popup.classList.add("popup_is-opened");
+  popup.classList.add("popup_is-animated");
+  document.addEventListener("keydown", escKeyHandler);
+  popup.addEventListener("mousedown", handleCloseOverlay);
 }
 
-export const closePopup = (popup) => {
-  popup.classList.remove('popup_is-opened');
-  document.removeEventListener('keydown', closeEsc);
+export function closePopup(popup) {
+  popup.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", escKeyHandler);
+  popup.removeEventListener("mousedown", handleCloseOverlay);
 }
 
-const closeEsc = (evt) => {
-  const openedPopup = document.querySelector('.popup_is-opened');
-  if (evt.code === 'Escape' && openedPopup) closePopup(openedPopup);
+function handleCloseOverlay(e) {
+  if (e.target === e.currentTarget) {
+    closePopup(e.currentTarget);
+  }
 }
