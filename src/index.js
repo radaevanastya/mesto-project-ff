@@ -33,7 +33,7 @@ const addInputUrl = profileAddPopup.querySelector('.popup__input_type_url');
 const imagePopup = openPopupImage.querySelector('.popup__image');
 const imagePopupDesc = openPopupImage.querySelector('.popup__caption');
 
-AllPopup.forEach((popup) => {
+allPopup.forEach((popup) => {
   popup.addEventListener('mouseup', (evt) => {
     const isCloseBtn = evt.target.classList.contains('popup__close');
     const isOverlay = evt.target === evt.currentTarget;
