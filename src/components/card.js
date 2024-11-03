@@ -1,30 +1,71 @@
+import { delLike, addLike, delCard } from "./api";
+
 const cardTemplate = document.querySelector('#card-template').content;
 
-export const createCard = (el, deleteCard, openImage) => {
-  const elementCard = cardTemplate.cloneNode(true);
+export const createCard = (data, userID, addLikeCard, openImage, deleteCard) => {
+  const cardElement = cardTemplate.cloneNode(true);
 
-  const card = elementCard.querySelector('.card');
+  const card = cardElement.querySelector('.card');
   const cardText = card.querySelector('.card__title');
   const cardImage = card.querySelector('.card__image');
   const cardBtn = card.querySelector('.card__delete-button');
-  const cardLike = card.querySelector('.card__like-button');
+  const cardLikeBtn = card.querySelector('.card__like-button');
+  const cardLikeCounter = card.querySelector('.card__like-counter');
 
-  cardText.textContent = el.name;
-  cardImage.alt = el.name;
-  cardImage.src = el.link;
+  cardLikeCounter.textContent = data.likes.length;
+  cardText.textContent = data.name;
+  cardImage.alt = data.name;
+  cardImage.src = data.link;
+  card.id = data._id;
 
-  cardBtn.addEventListener('click', deleteCard);
-  cardLike.addEventListener('click', () => handleLike(card));
-  cardImage.addEventListener('click', () => openImage(el));
+  if (data.owner._id !== userID) {
+    cardBtn.remove();
+  }
 
-  return elementCard;
+  if (check(data, userID)) {
+    cardLikeBtn.classList.add('card__like-button_is-active');
+  } else {
+    cardLikeBtn.classList.remove('card__like-button_is-active');
+  }
+
+  cardImage.addEventListener('click', () => openImage(data));
+  cardBtn.addEventListener('click', () => deleteCard(card));
+  cardLikeBtn.addEventListener('click', () => addLikeCard(data, userID, cardLikeBtn, cardLikeCounter));
+
+  return cardElement;
 }
 
-export const deleteCard = (evt) => {
-  evt.target.closest('.card').remove();
+export const deleteCard = (card) => {
+  delCard(card.id)
+    .then(() => card.remove())
+    .catch((err) => console.error(`Ошибка: ${err}`))
 }
 
-export const handleLike = (card) => {
-  const likeBtn = card.querySelector('.card__like-button');
-  likeBtn.classList.toggle('card__like-button_is-active');
+export const addLikeCard = (card, userID, buttonElement, countElement) => {
+  if (check(card, userID)) {
+    delLike(card)
+    .then((res) => {
+      handleLike(res, buttonElement, countElement);
+      card.likes = res.likes;
+    }).catch(handleLikeError)
+  } else {
+    addLike(card)
+    .then((res) => {
+      handleLike(res, buttonElement, countElement);
+      card.likes = res.likes;
+    }).catch(handleLikeError)
+  }
+}
+
+const check = (card, userID) => {
+  return card.likes.some((like) => like._id === userID);
+}
+
+const handleLike = (res, buttonElement, countElement) => {
+  buttonElement.classList.toggle('card__like-button_is-active');
+  countElement.textContent = res.likes.length;
+}
+
+const handleLikeError = (err) => {
+  console.error(`Ошибка: ${err}`);
 }
