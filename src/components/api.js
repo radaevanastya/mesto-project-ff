@@ -1,59 +1,71 @@
 const config = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-25',
+  baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-25",
   headers: {
-    authorization: '66b0643d-bcff-4460-80e1-d8d6bb8cb3f01',
-    'Content-Type': 'application/json'
-  }
-}
+    authorization: "66b0643d-bcff-4460-80e1-d8d6bb8cb3f0",
+    "Content-type": "application/json",
+  },
+};
 
-const handleResponse = (res) => {
+const checkResponse = (res) => {
   if (res.ok) {
     return res.json();
   } else {
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return Promise.reject(new Error(`Ошибка: ${res.status}`));
   }
 };
 
-const post = (url, data, method = 'POST') => {
-  return fetch(`${config.baseUrl}${url}`, {
-    method,
+export const getUserRequest = () =>
+  fetch(`${config.baseUrl}/users/me`, {
+    method: "GET",
     headers: config.headers,
-    body: JSON.stringify(data)
-  }).then(handleResponse);
-};
+  }).then(checkResponse);
 
-export const getUser = () => {
-  return fetch(`${config.baseUrl}/users/me`, {
+export const loadCards = () =>
+  fetch(`${config.baseUrl}/cards`, {
+    method: "GET",
     headers: config.headers,
-  }).then(handleResponse);
-};
+  }).then(checkResponse);
 
-export const getCards = () =>{
-  return fetch(`${config.baseUrl}/cards`, {
+export const editProfileApi = (nameInput, jobInput) => 
+  fetch(`${config.baseUrl}/users/me`, {
+    method: "PATCH",
     headers: config.headers,
-  }).then(handleResponse);
-}
+    body: JSON.stringify({
+      name: nameInput,
+      about: jobInput,
+    }),
+  }).then(checkResponse);    
 
-export const formEdit = (inputName, inputDesc) => {
-  return post('/users/me', { name: inputName, about: inputDesc }, 'PATCH');
-}
-
-export const avatarEdit = (inputLink) => {
-  return post('/users/me/avatar', { avatar: inputLink }, 'PATCH');
-}
-
-export const addLike = (data) => {
-  return post(`/cards/likes/${data._id}`, {}, 'PUT');
-}
-
-export const delLike = (data) => {
-  return post(`/cards/likes/${data._id}`, {}, 'DELETE');
-}
-
-export const addCard = (inputName, inputLink) => {
-  return post('/cards' , { name: inputName, link: inputLink});
-}
-
-export const delCard = (card) => {
-  return post(`/cards/${card}`, {}, 'DELETE');
-}
+export const newAvatarApi = (link) => 
+  fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({ avatar: link }),
+  }).then(checkResponse);
+  
+export const addNewCardApi = (name, link) =>
+  fetch(`${config.baseUrl}/cards`, {
+    method: "POST",
+    headers: config.headers,
+    body: JSON.stringify({ name, link }),
+  }).then(checkResponse);
+  
+export const deleteDataCard = (cardId) =>
+  fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then(checkResponse);
+  
+ export const deleteLikeCard = (cardId) =>
+  fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then(checkResponse);
+  
+export const putLikeCard = (cardId) =>
+  fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "PUT",
+    headers: config.headers,
+    body: JSON.stringify({ _id: cardId }),
+  }).then(checkResponse);
+  
