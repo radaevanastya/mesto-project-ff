@@ -25,12 +25,16 @@ const setEventListeners = (formElement, elements) => {
 };
 
 const checkInputValidity = (formElement, inputElement, elements) => {
-  inputElement.validity.patternMismatch
+  if (inputElement.validity.patternMismatch) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-    inputElement.setCustomValidity(""); 
-    inputElement.validity.valid
+  } else {
+    inputElement.setCustomValidity("");
+  }
+  if (inputElement.validity.valid) {
     hideError(formElement, inputElement, elements);
+  } else {
     showError(formElement, inputElement, inputElement.validationMessage, elements);
+  }
 };
 
 const hasInvalidInput = (inputList) => inputList.some(inputElement => !inputElement.validity.valid);
