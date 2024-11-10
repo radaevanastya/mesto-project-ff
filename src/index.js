@@ -40,7 +40,7 @@ let userId, cardId;
 
 profileOpenAvatar.addEventListener("click", function () {
   openPopup(modalNewAvatar);
-  clearValidation(modalNewAvatar, validationElements, enableValidation);
+  clearValidation(modalNewAvatar, validationElements); 
 });
 
 function openImage(link, alt) {
@@ -52,7 +52,7 @@ function openImage(link, alt) {
 
 profileAddButton.addEventListener("click", function () {
   openPopup(modalNewCard);
-  clearValidation(modalNewCard, validationElements, enableValidation);
+  clearValidation(modalNewCard, validationElements);
 });
 
 profileEditButton.addEventListener("click", function () {
@@ -60,7 +60,7 @@ profileEditButton.addEventListener("click", function () {
   jobInput.value = profileDescription.textContent;
 
   openPopup(modalEdit);
-  clearValidation(modalEdit, validationElements, enableValidation);
+  clearValidation(modalEdit, validationElements);
 });
 
 
